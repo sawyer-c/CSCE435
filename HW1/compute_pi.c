@@ -9,7 +9,7 @@
 #include <math.h>
 #include <sys/time.h>
 
-#define MAX_THREADS     1024
+#define MAX_THREADS     8192
 
 pthread_t p_threads[MAX_THREADS];
 pthread_attr_t attr;
