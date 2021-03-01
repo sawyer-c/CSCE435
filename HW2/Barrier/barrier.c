@@ -48,7 +48,7 @@ void barrier_simple () {
         return;
     }
     //otherwise, wait for another thread
-    pthread_cond_wait(&cond_barrier);
+    pthread_cond_wait(&cond_barrier, &lock_barrier);
     //then unlock
     pthread_mutex_unlock(&lock_barrier);
 
