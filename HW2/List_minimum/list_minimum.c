@@ -76,7 +76,7 @@ void *find_minimum (void *s) {
     count++;
     
     //lock the minimum so other threads don't overwrite
-    pthread_mutex_lock(&lock_minimum);
+    pthread_mutex_unlock(&lock_minimum);
     // Thread exits
     pthread_exit(NULL);
 }
