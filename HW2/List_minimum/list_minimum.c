@@ -55,7 +55,7 @@ void *find_minimum (void *s) {
     // Thread updates minimum 
     // *
     // *
-    pthread_attr_lock(&lock_minimum);
+    pthread_mutex_lock(&lock_minimum);
 
     //If beginning of count....
     if(count==0){
