@@ -34,11 +34,25 @@ int count;			// Count of threads that have reached barrier
 // Simple barrier routine
 void barrier_simple () {
 
-    // * 
-    // * 
-    // * Put your code here ...
-    // * 
-    // * 
+    pthread_mutex_lock(&lock_barrier);
+
+    count++;
+
+    if(count==num_threads){
+
+        //Broadcast to all other threads
+        pthread_cond_broadcast(&cond_barrier);
+        //Unlock Mutex
+        pthread_mutex_unlock(&lock_barrier);
+
+        return;
+    }
+    //otherwise, wait for another thread
+    pthread_mutext_wait(&cond_barrier);
+    //then unlock
+    pthread_mutex_unlock(&lock_barrier);
+
+    return;
 
 }
 

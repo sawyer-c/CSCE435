@@ -49,16 +49,34 @@ void *find_minimum (void *s) {
     // Thread computes minimum of list[my_start ... my_end]
     int my_minimum = list[my_start]; 
     for (j = my_start+1; j <= my_end; j++) {
-	if (my_minimum > list[j]) my_minimum = list[j]; 
+	    if (my_minimum > list[j]) my_minimum = list[j]; 
     }
 
     // Thread updates minimum 
     // *
     // *
-    // Put your code here ...
-    // *
-    // *
+    pthread_attr_lock(&lock_minimum);
 
+    //If beginning of count....
+    if(count==0){
+        //initialize
+        minimum = my_minimum;
+    }
+
+    //otherwise....
+    else
+    {
+        if(my_minimum < minimum){
+            //set the new min.
+            minimum = my_minimum;
+        }
+    }
+
+    //increment counter
+    count++;
+    
+    //lock the minimum so other threads don't overwrite
+    pthread_mutex_lock(&lock_minimum);
     // Thread exits
     pthread_exit(NULL);
 }
