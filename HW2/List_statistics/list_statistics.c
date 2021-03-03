@@ -69,7 +69,7 @@ void *find_stats (void *s) {
     
     //we calculate the mean when all the threads are done adding
     if(count == num_threads){
-        mean = mean/(double(list_size));
+        mean = mean/(1.00*(list_size));
         
         //reset counter
         count = 0;
@@ -109,7 +109,7 @@ void *find_stats (void *s) {
     if (count == num_threads)
     {
         //find true standard deviation with the Math::sqrt() function
-        std_dev = sqrt(std_dev/(double(list_size)));
+        std_dev = sqrt(std_dev/(1.00*(list_size)));
 
         pthread_cond_broadcast(&cond_barrier);
         pthread_mutex_unlock(&lock_value);
@@ -173,7 +173,7 @@ int main(int argc, char *argv[]) {
     //Calculate the real standard deviation
     for (int i = 0; i < list_size; i++)
     {
-        true_std_dev = true_std_dev + double((list[i]-true_mean)*(list[i]-true_mean));
+        true_std_dev = true_std_dev + 1.00*((list[i]-true_mean)*(list[i]-true_mean));
     }
     
     // Initialize count
