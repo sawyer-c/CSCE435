@@ -1,3 +1,7 @@
+// Sawyer Cowan
+// CSCE 435
+// 226005454
+
 //
 // Computes the minimum of a list using multiple threads
 //

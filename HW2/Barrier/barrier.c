@@ -1,4 +1,7 @@
-//
+// Sawyer Cowan
+// CSCE 435
+// 226005454
+
 // Implement a barrier for the threads; threads must wait at the barrier
 // for all threads to reach it before going beyond
 //

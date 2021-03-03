@@ -1,8 +1,9 @@
 //Calculates the mean and standard deviation of a list
 //
-//Sawyer Cowan
-//226005454
-//
+// Sawyer Cowan
+// CSCE 435
+// 226005454
+
 #include <pthread.h>
 #include <stdio.h>
 #include <stdlib.h>
