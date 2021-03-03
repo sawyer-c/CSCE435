@@ -116,7 +116,7 @@ void *find_stats (void *s) {
     }
     else //otherwise, wait for threads to finish
     {
-        pthread_cond_wait(&cond_barrier);
+        pthread_cond_wait(&cond_barrier, &lock_value);
         pthread_mutex_unlock(&lock_value);
     }
     
@@ -168,7 +168,7 @@ int main(int argc, char *argv[]) {
 	
     }
     //Calculate the real mean
-    true_mean = true_mean / (double(list_size));
+    true_mean = true_mean / (1.00*(list_size));
 
     //Calculate the real standard deviation
     for (int i = 0; i < list_size; i++)
