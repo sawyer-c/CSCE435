@@ -276,7 +276,7 @@ int main (int argc, char **argv) {
             // local_max = MyLawn.number_of_ants_in_cell(i,j);
             
             
-		if (MyLawn.number_of_ants_in_cell(i,j) > 0) {
+		if (MyLawn.number_of_ants_in_cell(i,j) > 1) {
             // omp_set_lock(lck);
             // shared_max = local_max;
             if (MyLawn.guess_anthill_location(i,j) == 1)
