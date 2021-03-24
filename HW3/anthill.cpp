@@ -267,7 +267,7 @@ int main (int argc, char **argv) {
     double shared_max = 0.0;
     start_time = omp_get_wtime(); 
     volatile int found = 0;
-#pragma omp parallel for default(none) shared(MyLawn, found, size, shared_max, lck)
+#pragma omp parallel for default(none) shared(MyLawn, found, size, shared_max)
     for (int i = (omp_get_thread_num()*(size*size/omp_get_num_threads())) % size; i < MyLawn.m; i++) {
 	for (int j = (omp_get_thread_num()*(size*size/omp_get_num_threads())) / size; j < MyLawn.m; j++) {
         double local_max = 0.0;
