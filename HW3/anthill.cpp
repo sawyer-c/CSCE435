@@ -262,9 +262,9 @@ int main (int argc, char **argv) {
 
     MyLawn.save_Lawn_to_file(); // Not recommended when size is large
 
-    omp_lock_t *lck;
-    omp_init_lock(lck);
-    volatile double shared_max = 0.0;
+    // omp_lock_t *lck;
+    // omp_init_lock(lck);
+    double shared_max = 0.0;
     start_time = omp_get_wtime(); 
     volatile int found = 0;
 #pragma omp parallel for default(none) shared(MyLawn, found, size, shared_max, lck)
