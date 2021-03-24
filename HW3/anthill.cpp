@@ -264,7 +264,7 @@ int main (int argc, char **argv) {
 
     omp_lock_t *lck;
     omp_init_lock(lck);
-    double shared_max = 0.0;
+    volatile double shared_max = 0.0;
     start_time = omp_get_wtime(); 
     volatile int found = 0;
 #pragma omp parallel for default(none) shared(MyLawn, found, size, shared_max, lck)
@@ -276,15 +276,17 @@ int main (int argc, char **argv) {
             
             
 		if (local_max > shared_max) {
-            omp_set_lock(lck);
+            // omp_set_lock(lck);
             shared_max = local_max;
             if (MyLawn.guess_anthill_location(i,j) == 1)
             {
                 found = 1;
+                // omp_unset_lock(lck);
+                // omp_destroy_lock(lck);
                 #pragma omp flush(found)
-                omp_unset_lock(lck);
+                
             }
-            omp_unset_lock(lck);
+            // omp_unset_lock(lck);
 		}
 	    }
 	}
