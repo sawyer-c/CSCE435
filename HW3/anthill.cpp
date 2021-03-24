@@ -271,6 +271,8 @@ int main (int argc, char **argv) {
     volatile int found = 0;
 #pragma omp parallel for default(none) shared(MyLawn, found)
     for (int i = 0; i < MyLawn.m; i++) {
+        int thread_num = omp_get_thread_num();
+        printf("Thread Num = %d", thread_num);
 	for (int j = 0; j < MyLawn.m; j++) {
 	    if (found == 0) {
 		if (MyLawn.number_of_ants_in_cell(i,j) >= 1) {
