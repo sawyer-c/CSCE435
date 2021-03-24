@@ -271,9 +271,12 @@ int main (int argc, char **argv) {
     for (int i = 0; i < MyLawn.m; i++) {
 	for (int j = 0; j < MyLawn.m; j++) {
 	    if (found == 0) {
-		if (MyLawn.guess_anthill_location(i,j) == 1) {
-		    found = 1;
-#pragma omp flush(found)
+		if (MyLawn.number_of_ants_in_cell(i,j) >= 1) {
+            if (MyLawn.guess_anthill_location(i,j) == 1)
+            {
+                found = 1;
+                #pragma omp flush(found)
+            }
 		}
 	    }
 	}
