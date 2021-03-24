@@ -278,10 +278,10 @@ int main (int argc, char **argv) {
     start_time = omp_get_wtime(); 
     volatile int found = 0;
 #pragma omp parallel for default(none) shared(MyLawn, found)
-    for (int i = (omp_get_thread_num()*(size*size/omp_get_num_threads()) % size; i < MyLawn.m; i++) {
+    for (int i = (omp_get_thread_num()*(size*size/omp_get_num_threads())) % size; i < MyLawn.m; i++) {
         // int thread_num = omp_get_thread_num();
         // printf("Thread Num = %d", thread_num);
-	for (int j = (omp_get_thread_num()*(size*size/omp_get_num_threads()) / size; j < MyLawn.m; j++) {
+	for (int j = (omp_get_thread_num()*(size*size/omp_get_num_threads())) / size; j < MyLawn.m; j++) {
 	    if (found == 0) {
 		if (MyLawn.number_of_ants_in_cell(i,j) >= 1) {
             if (MyLawn.guess_anthill_location(i,j) == 1)
