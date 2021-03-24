@@ -281,6 +281,7 @@ int main (int argc, char **argv) {
             {
                 found = 1;
                 #pragma omp flush(found)
+                omp_unset_lock(lck);
             }
             omp_unset_lock(lck);
 		}
