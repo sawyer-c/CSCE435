@@ -265,11 +265,11 @@ int main (int argc, char **argv) {
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     // Example Approach #1: Brute force approach
 
-    start_time = omp_get_wtime(); 
-    volatile int found = 0;
-#pragma omp parallel for default(none) shared(MyLawn, found) 
+    start_time = omp_get_wtime();
     int thread_num = omp_get_thread_num();
-    printf("Thread Num = %d", thread_num);
+    printf("Thread Num = %d", thread_num); 
+    volatile int found = 0;
+#pragma omp parallel for default(none) shared(MyLawn, found)
     for (int i = 0; i < MyLawn.m; i++) {
 	for (int j = 0; j < MyLawn.m; j++) {
 	    if (found == 0) {
