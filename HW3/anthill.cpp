@@ -262,33 +262,27 @@ int main (int argc, char **argv) {
 
     MyLawn.save_Lawn_to_file(); // Not recommended when size is large
 
-    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    // Example Approach #1: Brute force approach
-    
-    //calculate i value start
-    // omp_get_thread_num()
-
-    //calculate j value start
-    
-    
-    //set that for each thread
-
-
-
+    omp_lock_t *lck;
+    omp_init_lock(lck);
+    double shared_max = 0.0;
     start_time = omp_get_wtime(); 
     volatile int found = 0;
-#pragma omp parallel for default(none) shared(MyLawn, found, size)
+#pragma omp parallel for default(none) shared(MyLawn, found, size, shared_max, lck)
     for (int i = (omp_get_thread_num()*(size*size/omp_get_num_threads())) % size; i < MyLawn.m; i++) {
-        // int thread_num = omp_get_thread_num();
-        // printf("Thread Num = %d", thread_num);
 	for (int j = (omp_get_thread_num()*(size*size/omp_get_num_threads())) / size; j < MyLawn.m; j++) {
 	    if (found == 0) {
-		if (MyLawn.number_of_ants_in_cell(i,j) >= 1) {
+            double local_max = MyLawn.number_of_ants_in_cell(i,j);
+            
+            
+		if (local_max > shared_max) {
+            omp_set_lock(lck);
+            shared_max = local_max;
             if (MyLawn.guess_anthill_location(i,j) == 1)
             {
                 found = 1;
                 #pragma omp flush(found)
             }
+            omp_unset_lock(lck);
 		}
 	    }
 	}
