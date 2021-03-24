@@ -263,22 +263,22 @@ int main (int argc, char **argv) {
     MyLawn.save_Lawn_to_file(); // Not recommended when size is large
 
     
-    double shared_max = 0.0;
+    // double shared_max = 0.0;
     start_time = omp_get_wtime(); 
     volatile int found = 0;
-    omp_lock_t *lck;
-    omp_init_lock(lck);
-#pragma omp parallel for default(none) shared(MyLawn, found, size, shared_max, lck)
+    // omp_lock_t *lck;
+    // omp_init_lock(lck);
+#pragma omp parallel for default(none) shared(MyLawn, found, size, shared_max)
     for (int i = (omp_get_thread_num()*(size*size/omp_get_num_threads())) % size; i < MyLawn.m; i++) {
 	for (int j = (omp_get_thread_num()*(size*size/omp_get_num_threads())) / size; j < MyLawn.m; j++) {
         double local_max = 0.0;
         if (found == 0) {
-            local_max = MyLawn.number_of_ants_in_cell(i,j);
+            // local_max = MyLawn.number_of_ants_in_cell(i,j);
             
             
-		if (local_max > shared_max) {
+		if (MyLawn.number_of_ants_in_cell(i,j) > 0) {
             // omp_set_lock(lck);
-            shared_max = local_max;
+            // shared_max = local_max;
             if (MyLawn.guess_anthill_location(i,j) == 1)
             {
                 found = 1;
