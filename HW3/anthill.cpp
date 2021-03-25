@@ -268,6 +268,8 @@ int main (int argc, char **argv) {
     volatile int found = 0;
     // omp_lock_t *lck;
     // omp_init_lock(lck);
+    
+    //split up the work amongst number of threads
 #pragma omp parallel for default(none) shared(MyLawn, found, size)
     for (int i = (omp_get_thread_num()*(size*size/omp_get_num_threads())) % size; i < MyLawn.m; i++) {
 	for (int j = (omp_get_thread_num()*(size*size/omp_get_num_threads())) / size; j < MyLawn.m; j++) {
@@ -275,10 +277,11 @@ int main (int argc, char **argv) {
         if (found == 0) {
             // local_max = MyLawn.number_of_ants_in_cell(i,j);
             
-            
+        //check if the number of ants is at least 1    
 		if (MyLawn.number_of_ants_in_cell(i,j) >= 1) {
             // omp_set_lock(lck);
             // shared_max = local_max;
+            //if so, then guess
             if (MyLawn.guess_anthill_location(i,j) == 1)
             {
                 found = 1;
@@ -287,6 +290,7 @@ int main (int argc, char **argv) {
                 #pragma omp flush(found)
                 
             }
+            //otherwise, continue
             // omp_unset_lock(lck);
 		}
 	    }
