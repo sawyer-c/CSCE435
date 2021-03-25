@@ -271,7 +271,7 @@ int main (int argc, char **argv) {
 #pragma omp parallel for default(none) shared(MyLawn, found, size)
     for (int i = (omp_get_thread_num()*(size*size/omp_get_num_threads())) % size; i < MyLawn.m; i++) {
 	for (int j = (omp_get_thread_num()*(size*size/omp_get_num_threads())) / size; j < MyLawn.m; j++) {
-        double local_max = 0.0;
+        // double local_max = 0.0;
         if (found == 0) {
             // local_max = MyLawn.number_of_ants_in_cell(i,j);
             
