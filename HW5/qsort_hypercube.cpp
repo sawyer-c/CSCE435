@@ -313,8 +313,6 @@ void HyperCube_Class::HyperCube_QuickSort() {
 	// Communicate with neighbor along dimension k
 	nbr_k = neighbor_along_dim_k(k);
 	
-	//add modulo to ensure nbr_k value is within the hypercube size 
-	nbr_k = nbr_k % sub_hypercube_size;
 	if (nbr_k > my_id) {
 		//add modulo to ensure nbr_k value is within the hypercube size 
 		nbr_k = nbr_k % sub_hypercube_size;
