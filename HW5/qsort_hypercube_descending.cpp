@@ -190,13 +190,13 @@ int * HyperCube_Class::initialize_list(int type) {
 //
 void HyperCube_Class::check_list() {
     int tag = 0;
-    int max_nbr = -1;		// Assumes list contains non-negative integers; 6-21-2017
+    int min_nbr = INT_MAX;		// Assumes list contains non-negative integers; 6-21-2017
     int error, local_error;
-    int j, my_max;
+    int j, my_min, my_max;
     MPI_Status status; 
     // Receive largest list value from process with rank (my_id-1)
     if (my_id-1 >= 0) {
-	MPI_Recv(&max_nbr, 1, MPI_INT, my_id-1, tag, MPI_COMM_WORLD, &status);
+	MPI_Recv(&min_nbr, 1, MPI_INT, my_id-1, tag, MPI_COMM_WORLD, &status);
 	// Good practice to check status!
     }
     // Check that the local list is sorted and that elements are larger than 
@@ -204,20 +204,21 @@ void HyperCube_Class::check_list() {
     // (error is set to 1 if a pair of elements is not sorted correctly)
     local_error = 0;
     if (list_size > 0) {
-	if (list[0] > max_nbr) local_error = 1; 
+	if (list[0] > min_nbr) local_error = 1; 
 	for (j = 1; j < list_size; j++) {
 	    if (list[j] > list[j-1]) local_error = 1;
 	}
-	my_max = list[list_size-1];
-    } else {					// Modified 6-21-2017
-	my_max = max_nbr;			// Modified 6-21-2017
+	my_min = list[list_size-1];
+	my_max = list[0];
+    } else {
+	my_min = INT_MAX;
     }
     if (VERBOSE > 1) {
 	printf("[Proc: %0d] check_list: local_error = %d\n", my_id, local_error);
     }
     // Send largest list value to process with rank (my_id+1)
     if (my_id+1 < num_procs) {
-	MPI_Send(&my_max, 1, MPI_INT, my_id+1, tag, MPI_COMM_WORLD);
+	MPI_Send(&my_min, 1, MPI_INT, my_id+1, tag, MPI_COMM_WORLD);
 	// Good practice to check status!
     }
     // Collect errors from all processes
