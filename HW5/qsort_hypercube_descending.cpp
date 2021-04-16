@@ -82,7 +82,7 @@ int * HyperCube_Class::merged_list(int * list1, int list1_size, int * list2, int
     int idx2 = 0; 
     int idx = 0; 
     while ((idx1 < list1_size) && (idx2 < list2_size)) {
-	if (list1[idx1] <= list2[idx2]) {
+	if (list1[idx1] > list2[idx2]) {
 	    list[idx] = list1[idx1]; 
 	    idx++; idx1++;
 	} else {
