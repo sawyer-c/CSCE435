@@ -11,7 +11,7 @@
 #define MAX_LIST_SIZE_PER_PROC	268435456
 
 #ifndef VERBOSE
-#define VERBOSE 0			// Use VERBOSE to control output 
+#define VERBOSE 2			// Use VERBOSE to control output 
 #endif
 
 int compare_int(const void *, const void *);
