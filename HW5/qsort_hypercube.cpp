@@ -318,11 +318,11 @@ void HyperCube_Class::HyperCube_QuickSort() {
 		nbr_k = nbr_k % sub_hypercube_size;
 
 	    // ***** Add MPI call here *****
-		MPI_Send(&list_size_gt, 1, MPI_INT, nbr_k, 0, &sub_hypercube_comm)
+		MPI_Send(list_size_gt, 1, MPI_INT, nbr_k, 0, &sub_hypercube_comm)
 
 	    // MPI-3: Receive number of elements less than or equal to pivot
 		// ***** Add MPI call here *****
-		MPI_Recv(&nbr_list_size, 1, MPI_INT, nbr_k, 0, sub_hypercube_comm, MPI_STATUS_IGNORE)
+		MPI_Recv(nbr_list_size, 1, MPI_INT, nbr_k, 0, sub_hypercube_comm, MPI_STATUS_IGNORE)
 	    
 
 	    // Allocate storage for neighbor's list
