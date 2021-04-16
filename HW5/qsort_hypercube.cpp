@@ -297,7 +297,7 @@ void HyperCube_Class::HyperCube_QuickSort() {
 	// compute the sum of local_median values on processes of this hypercube
 
 	// ***** Add MPI call here *****
-
+	MPI_Allreduce(&local_median, &pivot, 1, MPI_INT, MPI_SUM, sub_hypercube_comm);
 
 	pivot = pivot/sub_hypercube_size;
 
