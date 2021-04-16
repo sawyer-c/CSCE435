@@ -316,6 +316,9 @@ void HyperCube_Class::HyperCube_QuickSort() {
 	//add modulo to ensure nbr_k value is within the hypercube size 
 	nbr_k = nbr_k % sub_hypercube_size;
 	if (nbr_k > my_id) {
+		//add modulo to ensure nbr_k value is within the hypercube size 
+		nbr_k = nbr_k % sub_hypercube_size;
+
 	    // MPI-2: Send number of elements greater than pivot
 
 	    // ***** Add MPI call here *****
@@ -351,6 +354,8 @@ void HyperCube_Class::HyperCube_QuickSort() {
 	    list_size = list_size_leq+nbr_list_size;
 
 	} else {
+		//add modulo to ensure nbr_k value is within the hypercube size 
+		nbr_k = nbr_k % sub_hypercube_size;
 	    // MPI-6: Receive number of elements greater than pivot
 	    // ***** Add MPI call here *****
 		MPI_Recv(&nbr_list_size, 1, MPI_INT, nbr_k, 0, sub_hypercube_comm, MPI_STATUS_IGNORE);
