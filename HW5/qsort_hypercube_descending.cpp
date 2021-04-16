@@ -7,6 +7,7 @@
 #include <cstdio>
 #include <new>
 #include <mpi.h>
+#include <limits.h>
 
 #define MAX_LIST_SIZE_PER_PROC	268435456
 
