@@ -315,7 +315,6 @@ void HyperCube_Class::HyperCube_QuickSort() {
 
 	if (nbr_k > my_id) {
 	    // MPI-2: Send number of elements greater than pivot
-		nbr_k = nbr_k % sub_hypercube_size;
 
 	    // ***** Add MPI call here *****
 		MPI_Send(&list_size_gt, 1, MPI_INT, nbr_k, 0, sub_hypercube_comm);
