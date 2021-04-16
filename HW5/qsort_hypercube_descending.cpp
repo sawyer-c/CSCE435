@@ -309,8 +309,8 @@ void HyperCube_Class::HyperCube_QuickSort() {
 	//   list[idx ... list_size-1] > pivot
 	idx = split_list_index(list, list_size, pivot);
 
-	list_size_leq = idx;
-	list_size_gt = list_size - idx;
+	list_size_gt = idx;
+	list_size_leq = list_size - idx;
 
 	// Communicate with neighbor along dimension k
 	nbr_k = neighbor_along_dim_k(k);
