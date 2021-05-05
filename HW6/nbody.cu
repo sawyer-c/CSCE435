@@ -8,22 +8,49 @@
 
 #define MAX_POINTS 1048576
 
+__device__ static float f_atomicMin(float* address, float val)
+{
+    int* address_as_i = (int*) address;
+    int old = *address_as_i, assumed;
+    do {
+        assumed = old;
+        old = ::atomicCAS(address_as_i, assumed,
+            __float_as_int(::fminf(val, __int_as_float(assumed))));
+    } while (assumed != old);
+    return __int_as_float(old);
+}
+
 // ---------------------------------------------------------------------------- 
 // Kernel Function to compute distance between all pairs of points
 // Input: 
-//	X: X[i] = x-coordinate of the ith point
-//	Y: Y[i] = y-coordinate of the ith point
-//	n: number of points
+//  X: X[i] = x-coordinate of the ith point
+//  Y: Y[i] = y-coordinate of the ith point
+//  n: number of points
 // Output: 
-//	D: D[0] = minimum distance
+//  D: D[0] = minimum distance
 //
-__global__ void minimum_distance(float * X, float * Y, volatile float * D, int n) {
+__global__ void minimum_distance(float * X, float * Y, float * D, int n) {
+    int i = threadIdx.x + blockIdx.x * blockDim.x;
 
-    // ------------------------------------------------------------
-    //
-    // Kernel function code goes here
-    //
-    // ------------------------------------------------------------
+    float dx, dy, Dij, min_distance, min_distance_i;
+    int j;
+    dx = X[1]-X[0];
+    dy = Y[1]-Y[0];
+    min_distance = sqrtf(dx*dx+dy*dy);
+    for (j = i+1; j < i+2; j++) {
+        dx = X[j]-X[i];
+        dy = Y[j]-Y[i];
+        min_distance_i = sqrtf(dx*dx+dy*dy);
+    }
+    for (j = i+1; j < n; j++) {
+        dx = X[j]-X[i];
+        dy = Y[j]-Y[i];
+        Dij = sqrtf(dx*dx+dy*dy);
+        if (min_distance_i > Dij) min_distance_i = Dij;
+    }
+    if (min_distance > min_distance_i) min_distance = min_distance_i;
+
+    f_atomicMin(D, min_distance);
 } 
 // ---------------------------------------------------------------------------- 
 // Host function to compute minimum distance between points
@@ -179,6 +206,29 @@ int main(int argc, char* argv[]) {
     // Invoke kernel function(s) here
     //
     // ------------------------------------------------------------
+    if((num_points) <= MAX_BLOCK_SIZE) {
+        dim3 ablock(num_points, 1, 1);
+        dim3 agrid(1, 1);
+        printf("Can fit all points on one block: agrid=(%d, %d, %d) ablock=(%d, %d, %d)\n", agrid.x, agrid.y, agrid.z, ablock.x, ablock.y, ablock.z);
+        minimum_distance<<<agrid, ablock>>>(dVx, dVy, dmin_dist, num_points);
+
+        cudaError_t err = cudaGetLastError();
+        if (err != cudaSuccess) 
+            printf("Error: %s\n", cudaGetErrorString(err));
+    }
+    else {
+        dim3 ablock(MAX_BLOCK_SIZE, 1, 1);
+        int numBlocks = (num_points) / MAX_BLOCK_SIZE;
+        dim3 agrid(numBlocks, numBlocks);
+
+        printf("Must use multiple blocks: agrid=(%d, %d, %d) ablock=(%d, %d, %d)\n", agrid.x, agrid.y, agrid.z, ablock.x, ablock.y, ablock.z);
+        minimum_distance<<<agrid, ablock>>>(dVx, dVy, dmin_dist, num_points);
+
+        cudaError_t err = cudaGetLastError();
+        if (err != cudaSuccess) 
+            printf("Error: %s\n", cudaGetErrorString(err));
+    }
+
 
     cudaEventRecord(stop, 0);
     cudaEventSynchronize(stop);
