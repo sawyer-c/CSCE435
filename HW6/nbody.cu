@@ -261,7 +261,6 @@ int main(int argc, char* argv[]) {
     printf("Min. distance (GPU) = %e\n", hmin_dist);
     printf("Min. distance (CPU) = %e\n", min_distance);
     printf("Relative error      = %e\n", fabs(min_distance-hmin_dist)/min_distance);
-    printf("hmin_dist           = %e\n", )
 
 
     // Free device memory 
