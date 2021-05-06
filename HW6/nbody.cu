@@ -194,7 +194,7 @@ int main(int argc, char* argv[]) {
     cudaMemcpy(dVx, hVx, size, cudaMemcpyHostToDevice);
     cudaMemcpy(dVy, hVy, size, cudaMemcpyHostToDevice);
     
-    float initial_distance[1] = {1024.0f}
+    float initial_distance[1] = {1024.0f};
     cudaMemcpy(dmin_dist, initial_distance, sizeof(float), cudaMemcpyHostToDevice);
 
     cudaEventRecord(stop, 0);
