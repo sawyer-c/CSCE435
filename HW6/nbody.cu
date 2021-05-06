@@ -124,8 +124,8 @@ int main(int argc, char* argv[]) {
 
     // Device parameters
     int MAX_BLOCK_SIZE;		// Maximum number of threads allowed on the device
-    int blocks;			// Number of blocks in grid
-    int threads_per_block;	// Number of threads per block
+    // int blocks;			// Number of blocks in grid
+    // int threads_per_block;	// Number of threads per block
 
     // Timing variables
     cudaEvent_t start, stop;		// GPU timing variables
@@ -216,24 +216,23 @@ int main(int argc, char* argv[]) {
     if(num_points <= MAX_BLOCK_SIZE) {
         dim3 block_of_points(num_points, 1, 1);
         dim3 grid_dimensions(1, 1);
-        printf("Using one block: grid_dimensions=(%d, %d, %d) block_of_points=(%d, %d, %d)\n", grid_dimensions.x, grid_dimensions.y, grid_dimensions.z, block_of_points.x, block_of_points.y, block_of_points.z);
+        printf("Using one block: grid=(%d, %d, %d) blocks=(%d, %d, %d)\n", grid_dimensions.x, grid_dimensions.y, grid_dimensions.z, block_of_points.x, block_of_points.y, block_of_points.z);
         minimum_distance<<<block_of_points, grid_dimensions>>>(dVx, dVy, dmin_dist, num_points);
 
         cudaError_t error_cuda = cudaGetLastError();
         if (error_cuda != cudaSuccess) 
-            printf("Error: %s\n", cudaGetErrorString(error_cuda));
+            printf("Cuda Error: %s\n", cudaGetErrorString(error_cuda));
     }
     //make multiple blocks
     else {
         dim3 block_of_points(MAX_BLOCK_SIZE, 1, 1);
-        int numBlocks = (num_points) / MAX_BLOCK_SIZE;
+        int threads_per_block = (num_points) / MAX_BLOCK_SIZE;
         dim3 grid_dimensions(numBlocks, numBlocks);
-
         minimum_distance<<<grid_dimensions, block_of_points>>>(dVx, dVy, dmin_dist, num_points);
-        printf("Using multiple blocks: grid_dimensions=(%d, %d, %d) block_of_points=(%d, %d, %d)\n", grid_dimensions.x, grid_dimensions.y, grid_dimensions.z, block_of_points.x, block_of_points.y, block_of_points.z);
+        printf("Using multiple blocks: grid=(%d, %d, %d) blocks=(%d, %d, %d)\n", grid_dimensions.x, grid_dimensions.y, grid_dimensions.z, block_of_points.x, block_of_points.y, block_of_points.z);
         cudaError_t error_cuda = cudaGetLastError();
         if (error_cuda != cudaSuccess) 
-            printf("Error: %s\n", cudaGetErrorString(error_cuda));
+            printf("Cuda Error: %s\n", cudaGetErrorString(error_cuda));
     }
 
 
