@@ -115,7 +115,7 @@ int main(int argc, char* argv[]) {
     // Host Data
     float * hVx;		// host x-coordinate array
     float * hVy;		// host y-coordinate array
-    float hmin_dist;		// minimum value on host
+    float hmin_dist = 1234567;		// minimum value on host
 
     // Device Data
     float * dVx;		// device x-coordinate array
@@ -148,7 +148,6 @@ int main(int argc, char* argv[]) {
 	cudaSetDevice(0); 
 	cudaGetDeviceProperties(&deviceProp, 0);
 	MAX_BLOCK_SIZE = deviceProp.maxThreadsPerBlock;
-    printf("%d", MAX_BLOCK_SIZE);
     } else {
 	printf("Warning: No GPU device found ... results may be incorrect\n");
     }
