@@ -115,7 +115,7 @@ int main(int argc, char* argv[]) {
     // Host Data
     float * hVx;		// host x-coordinate array
     float * hVy;		// host y-coordinate array
-    float hmin_dist = 10;		// minimum value on host
+    float hmin_dist = ;		// minimum value on host
 
     // Device Data
     float * dVx;		// device x-coordinate array
@@ -214,7 +214,7 @@ int main(int argc, char* argv[]) {
 
         cudaError_t error_cuda = cudaGetLastError();
         if (error_cuda != cudaSuccess) 
-            printf("Error: %s\n", cudaGetErrorString(err));
+            printf("Error: %s\n", cudaGetErrorString(error_cuda));
     }
     else {
         dim3 ablock(MAX_BLOCK_SIZE, 1, 1);
@@ -226,7 +226,7 @@ int main(int argc, char* argv[]) {
 
         cudaError_t error_cuda = cudaGetLastError();
         if (error_cuda != cudaSuccess) 
-            printf("Error: %s\n", cudaGetErrorString(err));
+            printf("Error: %s\n", cudaGetErrorString(error_cuda));
     }
 
 
