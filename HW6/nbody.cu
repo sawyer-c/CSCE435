@@ -115,7 +115,7 @@ int main(int argc, char* argv[]) {
     // Host Data
     float * hVx;		// host x-coordinate array
     float * hVy;		// host y-coordinate array
-    float hmin_dist;		// minimum value on host
+    float hmin_dist = 10;		// minimum value on host
 
     // Device Data
     float * dVx;		// device x-coordinate array
@@ -212,8 +212,8 @@ int main(int argc, char* argv[]) {
         printf("Can fit all points on one block: agrid=(%d, %d, %d) ablock=(%d, %d, %d)\n", agrid.x, agrid.y, agrid.z, ablock.x, ablock.y, ablock.z);
         minimum_distance<<<agrid, ablock>>>(dVx, dVy, dmin_dist, num_points);
 
-        cudaError_t err = cudaGetLastError();
-        if (err != cudaSuccess) 
+        cudaError_t error_cuda = cudaGetLastError();
+        if (error_cuda != cudaSuccess) 
             printf("Error: %s\n", cudaGetErrorString(err));
     }
     else {
@@ -224,8 +224,8 @@ int main(int argc, char* argv[]) {
         printf("Must use multiple blocks: agrid=(%d, %d, %d) ablock=(%d, %d, %d)\n", agrid.x, agrid.y, agrid.z, ablock.x, ablock.y, ablock.z);
         minimum_distance<<<agrid, ablock>>>(dVx, dVy, dmin_dist, num_points);
 
-        cudaError_t err = cudaGetLastError();
-        if (err != cudaSuccess) 
+        cudaError_t error_cuda = cudaGetLastError();
+        if (error_cuda != cudaSuccess) 
             printf("Error: %s\n", cudaGetErrorString(err));
     }
 
