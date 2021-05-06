@@ -226,8 +226,8 @@ int main(int argc, char* argv[]) {
     //make multiple blocks
     else {
         dim3 block_of_points(MAX_BLOCK_SIZE, 1, 1);
-        int threads_per_block = (num_points) / MAX_BLOCK_SIZE;
-        dim3 grid_dimensions(numBlocks, numBlocks);
+        int num_of_blocks = (num_points) / MAX_BLOCK_SIZE;
+        dim3 grid_dimensions(num_of_blocks, num_of_blocks);
         minimum_distance<<<grid_dimensions, block_of_points>>>(dVx, dVy, dmin_dist, num_points);
         printf("Using multiple blocks: grid=(%d, %d, %d) blocks=(%d, %d, %d)\n", grid_dimensions.x, grid_dimensions.y, grid_dimensions.z, block_of_points.x, block_of_points.y, block_of_points.z);
         cudaError_t error_cuda = cudaGetLastError();
