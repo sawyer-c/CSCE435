@@ -193,6 +193,9 @@ int main(int argc, char* argv[]) {
 
     cudaMemcpy(dVx, hVx, size, cudaMemcpyHostToDevice);
     cudaMemcpy(dVy, hVy, size, cudaMemcpyHostToDevice);
+    
+    float initial_distance[1] = {1024.0f}
+    cudaMemcpy(dmin_dist, initial_distance, sizeof(float), cudaMemcpyHostToDevice);
 
     cudaEventRecord(stop, 0);
     cudaEventSynchronize(stop);
@@ -206,7 +209,7 @@ int main(int argc, char* argv[]) {
     // Invoke kernel function(s) here
     //
     // ------------------------------------------------------------
-    if((num_points) <= MAX_BLOCK_SIZE) {
+    if(num_points <= MAX_BLOCK_SIZE) {
         dim3 ablock(num_points, 1, 1);
         dim3 agrid(1, 1);
         printf("Can fit all points on one block: agrid=(%d, %d, %d) ablock=(%d, %d, %d)\n", agrid.x, agrid.y, agrid.z, ablock.x, ablock.y, ablock.z);
