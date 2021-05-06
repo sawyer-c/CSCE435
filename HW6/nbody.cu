@@ -115,7 +115,7 @@ int main(int argc, char* argv[]) {
     // Host Data
     float * hVx;		// host x-coordinate array
     float * hVy;		// host y-coordinate array
-    float hmin_dist = 1000.0;		// minimum value on host
+    float hmin_dist;		// minimum value on host
 
     // Device Data
     float * dVx;		// device x-coordinate array
@@ -261,6 +261,7 @@ int main(int argc, char* argv[]) {
     printf("Min. distance (GPU) = %e\n", hmin_dist);
     printf("Min. distance (CPU) = %e\n", min_distance);
     printf("Relative error      = %e\n", fabs(min_distance-hmin_dist)/min_distance);
+    printf("hmin_dist           = %e\n", )
 
 
     // Free device memory 
