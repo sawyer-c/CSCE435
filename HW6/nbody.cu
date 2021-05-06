@@ -148,7 +148,7 @@ int main(int argc, char* argv[]) {
 	cudaSetDevice(0); 
 	cudaGetDeviceProperties(&deviceProp, 0);
 	MAX_BLOCK_SIZE = deviceProp.maxThreadsPerBlock;
-    printf(MAX_BLOCK_SIZE)
+    printf(MAX_BLOCK_SIZE);
     } else {
 	printf("Warning: No GPU device found ... results may be incorrect\n");
     }
