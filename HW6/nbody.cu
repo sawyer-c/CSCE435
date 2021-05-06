@@ -8,7 +8,7 @@
 
 #define MAX_POINTS 1048576
 
-__device__ static float f_atomicMin(float* address, float val)
+__device__ static float global_dev_min(float* address, float val)
 {
     int* address_as_i = (int*) address;
     int old = *address_as_i, assumed;
@@ -30,9 +30,8 @@ __device__ static float f_atomicMin(float* address, float val)
 //  D: D[0] = minimum distance
 //
 __global__ void minimum_distance(float * X, float * Y, float * D, int n) {
-    int i = threadIdx.x + blockIdx.x * blockDim.x;
-
     float dx, dy, Dij, min_distance, min_distance_i;
+    int i = threadIdx.x + blockIdx.x * blockDim.x;
     int j;
     dx = X[1]-X[0];
     dy = Y[1]-Y[0];
@@ -50,7 +49,8 @@ __global__ void minimum_distance(float * X, float * Y, float * D, int n) {
     }
     if (min_distance > min_distance_i) min_distance = min_distance_i;
 
-    f_atomicMin(D, min_distance);
+    //save global min to device
+    global_dev_min(D, min_distance);
 } 
 // ---------------------------------------------------------------------------- 
 // Host function to compute minimum distance between points
@@ -194,8 +194,10 @@ int main(int argc, char* argv[]) {
     cudaMemcpy(dVx, hVx, size, cudaMemcpyHostToDevice);
     cudaMemcpy(dVy, hVy, size, cudaMemcpyHostToDevice);
     
+    //cpy host memory to device memory
     float initial_distance[1] = {1024.0f};
     cudaMemcpy(dmin_dist, initial_distance, sizeof(float), cudaMemcpyHostToDevice);
+    //
 
     cudaEventRecord(stop, 0);
     cudaEventSynchronize(stop);
@@ -209,24 +211,26 @@ int main(int argc, char* argv[]) {
     // Invoke kernel function(s) here
     //
     // ------------------------------------------------------------
+    
+    //if the number of points does not exceed the block size
     if(num_points <= MAX_BLOCK_SIZE) {
-        dim3 ablock(num_points, 1, 1);
-        dim3 agrid(1, 1);
-        printf("Can fit all points on one block: agrid=(%d, %d, %d) ablock=(%d, %d, %d)\n", agrid.x, agrid.y, agrid.z, ablock.x, ablock.y, ablock.z);
-        minimum_distance<<<agrid, ablock>>>(dVx, dVy, dmin_dist, num_points);
+        dim3 block_of_points(num_points, 1, 1);
+        dim3 grid_dimensions(1, 1);
+        printf("Using one block: grid_dimensions=(%d, %d, %d) block_of_points=(%d, %d, %d)\n", grid_dimensions.x, grid_dimensions.y, grid_dimensions.z, block_of_points.x, block_of_points.y, block_of_points.z);
+        minimum_distance<<<block_of_points, grid_dimensions>>>(dVx, dVy, dmin_dist, num_points);
 
         cudaError_t error_cuda = cudaGetLastError();
         if (error_cuda != cudaSuccess) 
             printf("Error: %s\n", cudaGetErrorString(error_cuda));
     }
+    //make multiple blocks
     else {
-        dim3 ablock(MAX_BLOCK_SIZE, 1, 1);
+        dim3 block_of_points(MAX_BLOCK_SIZE, 1, 1);
         int numBlocks = (num_points) / MAX_BLOCK_SIZE;
-        dim3 agrid(numBlocks, numBlocks);
+        dim3 grid_dimensions(numBlocks, numBlocks);
 
-        printf("Must use multiple blocks: agrid=(%d, %d, %d) ablock=(%d, %d, %d)\n", agrid.x, agrid.y, agrid.z, ablock.x, ablock.y, ablock.z);
-        minimum_distance<<<agrid, ablock>>>(dVx, dVy, dmin_dist, num_points);
-
+        minimum_distance<<<grid_dimensions, block_of_points>>>(dVx, dVy, dmin_dist, num_points);
+        printf("Using multiple blocks: grid_dimensions=(%d, %d, %d) block_of_points=(%d, %d, %d)\n", grid_dimensions.x, grid_dimensions.y, grid_dimensions.z, block_of_points.x, block_of_points.y, block_of_points.z);
         cudaError_t error_cuda = cudaGetLastError();
         if (error_cuda != cudaSuccess) 
             printf("Error: %s\n", cudaGetErrorString(error_cuda));
